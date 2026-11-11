@@ -1,0 +1,21 @@
+{
+  "name": "dafter-sawaq",
+  "version": "1.0.0",
+  "private": true,
+  "description": "دفتر السواق: تتبع مداخيل ومصاريف سائق توصيل",
+  "scripts": {
+    "build:firebase": "esbuild src/firebase-entry.js --bundle --format=esm --platform=browser --minify --outfile=www/vendor/firebase.js",
+    "build:icons": "node scripts/make-icons.js",
+    "build": "npm run build:firebase && npm run build:icons"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
+    "esbuild": "^0.24.0",
+    "firebase": "^10.14.1",
+    "sharp": "^0.33.5"
+  }
+}

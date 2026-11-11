@@ -1,0 +1,8 @@
+{
+  "appId": "com.dafter.sawaq",
+  "appName": "دفتر السواق",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
