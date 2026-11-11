@@ -1,0 +1,9 @@
+node_modules/
+android/
+ios/
+.DS_Store
+package-lock.json
+# تتولد تلقائيا بـ npm run build
+www/vendor/
+www/icon-192.png
+www/icon-512.png
