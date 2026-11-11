@@ -1,0 +1,55 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install and build web files
+        run: |
+          npm install
+          npm run build
+
+      - name: Create Android project
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk dafter-sawaq.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dafter-sawaq-apk
+          path: dafter-sawaq.apk
+
+      - name: Publish APK as a release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: آخر نسخة أندرويد
+          body: حمّل ملف dafter-sawaq.apk وثبّتو على التليفون.
+          prerelease: true
+          files: dafter-sawaq.apk
