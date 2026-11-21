@@ -293,7 +293,7 @@ section.block{display:flex;flex-direction:column;gap:12px}
 "use strict";
 
 var KINDS={
-  income:{label:"مدخول",title:"مدخول جديد",hint:"كل مبلغ تسجلو يتحسب طلبية وحدة.",noNote:true,cats:[{c:"طلبيات"}]},
+  income:{label:"مدخول",title:"مدخول جديد",hint:"طلبيات: كل مبلغ تسجلو يتحسب طلبية وحدة. مجموع: مجموع النهار كامل، وكل مرة تسجلو يمسح القديم ويبقى الجديد. ما تخلطش الاثنين في نفس النهار باش ما يتحسبش المدخول مرتين.",noNote:true,cats:[{c:"طلبيات"},{c:"مجموع"}]},
   saving:{label:"مدخراتي",title:"مدخراتي",hint:"ما تدخلش في الربح الصافي.",opsFirst:true,cats:[{c:"موطو"},{c:"نفسي"},{c:"للدار"}],ops:[{c:"حطيت",d:1},{c:"سحبت",d:-1}]},
   custsaving:{label:"مدخرات زبائن",title:"مدخرات زبائن",hint:"ما تدخلش في الربح الصافي.",noNote:true,cats:[{c:"ريم"},{c:"مروة"},{c:"كراء"},{c:"أخرى"}],ops:[{c:"استلمت",d:1},{c:"رجّعت",d:-1}]},
   expense:{label:"مصروف",title:"مصروف جديد",hint:"",cats:["ليصانس","ميكنيسيا","غسل","تأمين","فليكسي","انترنت","أكل","أخرى"].map(function(c){return {c:c}})},
@@ -322,7 +322,7 @@ function valid(e){return e&&typeof e.amount==="number"&&e.date}
 
 var RENAME={"بنزين":"ليصانس","صيانة":"ميكنيسيا","غسيل":"غسل","هاتف وانترنت":"فليكسي"};
 function norm(e){
-  if(e.kind==="income")e.cat="طلبيات";
+  if(e.kind==="income"&&e.cat!=="مجموع")e.cat="طلبيات";
   else if(e.kind==="expense"&&RENAME[e.cat])e.cat=RENAME[e.cat];
   else if(e.kind==="custsaving"&&(e.cat==="استلمت من زبون"||e.cat==="رجّعت لزبون"))e.cat="أخرى";
   else if(e.kind==="saving"&&(e.cat==="حطيت"||e.cat==="سحبت"))e.cat="أخرى";
@@ -344,9 +344,9 @@ function inPeriod(e){
 }
 
 function totals(list){
-  var r={i:0,x:0,orders:0};
+  var r={i:0,x:0,orders:0,oi:0};
   list.forEach(function(e){
-    if(e.kind==="income"){r.i+=e.amount;r.orders++}else if(e.kind==="expense"){r.x+=e.amount}
+    if(e.kind==="income"){r.i+=e.amount;if(e.cat!=="مجموع"){r.orders++;r.oi+=e.amount}}else if(e.kind==="expense"){r.x+=e.amount}
   });
   r.net=r.i-r.x;
   return r;
@@ -392,7 +392,7 @@ function renderSummary(){
   var st="";
   if(t.orders>0){
     st+='<span>الطلبيات <b class="num">'+t.orders+'</b></span>';
-    st+='<span>متوسط الطلبية <b class="num">'+fmt(t.i/t.orders)+' دج</b></span>';
+    st+='<span>متوسط الطلبية <b class="num">'+fmt(t.oi/t.orders)+' دج</b></span>';
   }
   if(t.i>0){
     st+='<span>المصاريف تاكل <b class="num">'+Math.round(t.x/t.i*100)+'%</b> من المداخيل</span>';
@@ -579,7 +579,12 @@ function submitForm(ev){
     var ochk=document.querySelector('input[name="op"]:checked');
     e.dir=K.ops[ochk?parseInt(ochk.value,10):0].d;
   }
-  addEntries([e]).then(function(){toast("تسجل")});
+  var replaced=false;
+  if(e.kind==="income"&&e.cat==="مجموع"){
+    var old=state.entries.filter(function(x){return x.kind==="income"&&x.cat==="مجموع"&&x.date===e.date}).map(function(x){return x.id});
+    if(old.length){replaced=true;removeEntries(old)}
+  }
+  addEntries([e]).then(function(){toast(replaced?"تبدل مجموع النهار":"تسجل")});
   $("#amount").value="";$("#note").value="";
   closeForm();
 }
