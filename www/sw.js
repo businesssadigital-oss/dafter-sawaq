@@ -1,8 +1,10 @@
 // خدمة بسيطة باش التطبيق يفتح حتى بدون نت. تجيب من الكاش وتحدّثو من الشبكة.
-var CACHE = "dafter-sawaq-v1";
+var CACHE = "dafter-sawaq-v2";
 var FILES = [
   "./",
   "index.html",
+  "app.css",
+  "app.js",
   "firebase-config.js",
   "vendor/firebase.js",
   "manifest.webmanifest",
