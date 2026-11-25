@@ -1,14 +1,12 @@
-// يولّد أيقونات PNG من icon.svg. يشتغل في GitHub Actions قبل النشر والبناء.
+// Generate installable app icons from the Souhail Delivery brand mark.
 const sharp = require("sharp");
-const fs = require("fs");
 const path = require("path");
-
 const www = path.join(__dirname, "..", "www");
-const svg = fs.readFileSync(path.join(www, "icon.svg"));
-
 (async () => {
-  for (const s of [192, 512]) {
-    await sharp(svg, { density: 300 }).resize(s, s).png().toFile(path.join(www, `icon-${s}.png`));
+  for (const size of [192, 512]) {
+    await sharp(path.join(www, "logo.svg"))
+      .resize(size, size, { fit: "contain", background: "#ffffff" })
+      .png().toFile(path.join(www, `icon-${size}.png`));
   }
-  console.log("icons done");
+  console.log("Souhail Delivery icons generated");
 })();

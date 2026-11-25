@@ -50,6 +50,10 @@ button{cursor:pointer}
 h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:700;text-wrap:balance}
 
 /* header */
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-logo{display:block;width:118px;height:auto;max-height:112px;object-fit:contain;border-radius:12px;background:#fff}
+.brand h1{font-size:25px}
+@media (max-width:380px){.brand-logo{width:92px}.brand h1{font-size:21px}}
 .top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .top h1{font-size:28px;line-height:1.2}
 .top .date{color:var(--muted);font-size:14px}

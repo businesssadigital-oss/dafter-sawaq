@@ -94,12 +94,12 @@ function renderSeg(){
 }
 
 function renderSummary(){
-  var list=state.entries.filter(inPeriod),t=totals(list),h="";
+  var list=state.entries.filter(inPeriod),t=totals(list),all=totals(state.entries),h="";
   h+='<div class="net-label">الربح الصافي · '+PL[state.period]+'</div>';
   h+='<div class="net'+(t.net<0?" neg":"")+'"><span class="num">'+(t.net>0?"+":"")+signed(t.net)+'</span><span class="cur">دج</span></div>';
   h+='<div class="split"><div><span>المداخيل</span><b class="in num">'+fmt(t.i)+' دج</b></div>'+
     '<div><span>المصاريف</span><b class="out num">'+fmt(t.x)+' دج</b></div>'+
-    '<div><span>التوصيلات</span><b class="dl num">'+t.orders+'</b><small class="num">'+fmt(t.oi)+' دج</small></div></div>';
+    '<div><span>مجموعي</span><b class="dl num">'+fmt(all.oi)+' دج</b><small>من بداية العمل · '+all.orders+' طلبية</small></div></div>';
   var st="";
   if(t.orders>0){
     st+='<span>متوسط التوصيلة <b class="num">'+fmt(t.oi/t.orders)+' دج</b></span>';
