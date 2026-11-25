@@ -53,9 +53,9 @@ function inPeriod(e){
 }
 
 function totals(list){
-  var r={i:0,x:0,orders:0,oi:0};
+  var r={i:0,x:0};
   list.forEach(function(e){
-    if(e.kind==="income"){r.i+=e.amount;if(e.cat!=="مجموع"){r.orders++;r.oi+=e.amount}}else if(e.kind==="expense"){r.x+=e.amount}
+    if(e.kind==="income"){r.i+=e.amount}else if(e.kind==="expense"){r.x+=e.amount}
   });
   r.net=r.i-r.x;
   return r;
@@ -99,7 +99,7 @@ function renderSummary(){
   h+='<div class="net'+(t.net<0?" neg":"")+'"><span class="num">'+(t.net>0?"+":"")+signed(t.net)+'</span><span class="cur">دج</span></div>';
   h+='<div class="split"><div><span>المداخيل</span><b class="in num">'+fmt(t.i)+' دج</b></div>'+
     '<div><span>المصاريف</span><b class="out num">'+fmt(t.x)+' دج</b></div>'+
-    '<div><span>مجموعي</span><b class="dl num">'+fmt(all.oi)+' دج</b><small>من بداية العمل · '+all.orders+' طلبية</small></div></div>';
+    '<div><span>مجموعي</span><b class="dl num">'+fmt(all.i)+' دج</b><small>مجموع جميع المداخيل من بداية العمل</small></div></div>';
   var st="";
   if(t.orders>0){
     st+='<span>متوسط التوصيلة <b class="num">'+fmt(t.oi/t.orders)+' دج</b></span>';
