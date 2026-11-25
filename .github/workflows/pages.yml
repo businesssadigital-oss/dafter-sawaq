@@ -27,14 +27,12 @@ jobs:
           node-version: 20
       - name: Build
         run: |
-          npm install
+          npm ci
           npm run build
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: www
-          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
