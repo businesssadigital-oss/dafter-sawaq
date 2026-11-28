@@ -166,6 +166,9 @@ function renderBreakdown(){
 function rowHTML(e){
   var sub=[];
   if(e.note)sub.push(esc(e.note));
+  if(typeof e.ts==="number"&&isFinite(e.ts)){
+    sub.push("الساعة "+new Date(e.ts).toLocaleTimeString(LOC,{hour:"2-digit",minute:"2-digit",hour12:false}));
+  }
   var K=KINDS[e.kind]||{label:""};
   var tag=(e.kind==="income"||e.kind==="expense")?"":esc(K.label)+" · ";
   var plus=e.kind==="income"||(e.kind!=="expense"&&e.dir!==-1);
