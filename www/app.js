@@ -8,7 +8,7 @@ var KINDS={
   expense:{label:"مصروف",title:"مصروف جديد",hint:"",cats:["ليصانس","ميكنيسيا","غسل","تأمين","فليكسي","انترنت","أكل","أخرى"].map(function(c){return {c:c}})},
   debt:{label:"ديون",title:"ديون",hint:"تسلفت: خذيت سلف. سلّفت: عطيت سلف لواحد. سدّدت ورجعولي: الإرجاع.",cats:[{c:"تسلفت",d:1,s:"me"},{c:"سدّدت",d:-1,s:"me"},{c:"سلّفت",d:1,s:"them"},{c:"رجعولي",d:-1,s:"them"}]}
 };
-var PL={day:"اليوم",week:"آخر 7 أيام",month:"هذا الشهر"};
+var PL={day:"اليوم",yesterday:"البارح",week:"آخر 7 أيام",month:"هذا الشهر"};
 var LSK="dafter-sawaq:v1";
 var LOC="ar-DZ-u-nu-latn";
 var PILL={none:["",""],loading:["جاري الاتصال…",""],ok:["✓ متزامن مع حسابك","ok"],saving:["جاري الحفظ…",""],offline:["ما كاينش اتصال حاليا","warn"],local:["محفوظ في هذا الجهاز فقط","warn"]};
@@ -48,6 +48,7 @@ function dayLabel(s){
 function inPeriod(e){
   var t=today();
   if(state.period==="day")return e.date===t;
+  if(state.period==="yesterday")return e.date===addDays(t,-1);
   if(state.period==="week")return e.date>addDays(t,-7)&&e.date<=t;
   return e.date.slice(0,7)===t.slice(0,7);
 }
@@ -282,6 +283,7 @@ function openForm(kind){
   });
   $("#formPanel").hidden=false;
   setErr("");
+  $("#entryDate").value=today();
   $("#amount").focus();
 }
 
@@ -297,7 +299,7 @@ function submitForm(ev){
     amount:Math.round(amt*100)/100,
     cat:c.c,
     note:K.noNote?"":$("#note").value.trim(),
-    date:today(),
+    date:$("#entryDate").value||today(),
     ts:Date.now()
   };
   if(c.d)e.dir=c.d;
